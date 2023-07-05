@@ -1,0 +1,14 @@
+[{
+  "name": "default",
+  "type": "postgres",
+  "host": "localhost",
+  "port": 5432,
+  "username": "cedoc",
+  "password": "1234",
+  "database": "lista-inteligente",
+  "entities": ["src/**/*.entity{ .ts,.js}"],
+  "synchronize": false,
+  "migrations": ["src/migrations/*{.ts,.js}"],
+  "migrationsTableName": "migrations_typeorm",
+  "migrationsRun": true
+}]

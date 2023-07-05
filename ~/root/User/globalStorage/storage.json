@@ -1,0 +1,34 @@
+{
+    "userDataProfilesMigration": true,
+    "profileAssociations": {
+        "workspaces": {
+            "file:///home/admin/projetos/data-lake": "__default__profile__"
+        },
+        "emptyWindows": {}
+    },
+    "profileAssociationsMigration": true,
+    "telemetry.machineId": "ed7ec1ec81bfc211ea1a231f955faa8e92ddae18f75424892bedf5604c00fa7d",
+    "backupWorkspaces": {
+        "workspaces": [],
+        "folders": [
+            {
+                "folderUri": "file:///home/admin/projetos/data-lake"
+            }
+        ],
+        "emptyWindows": []
+    },
+    "windowsState": {
+        "lastActiveWindow": {
+            "folder": "file:///home/admin/projetos/data-lake",
+            "backupPath": "/home/admin/projetos/data-lake/~/root/Backups/531d6d65ef04c05351079141a88f757c",
+            "uiState": {
+                "mode": 1,
+                "x": 2368,
+                "y": 193,
+                "width": 1024,
+                "height": 768
+            }
+        },
+        "openedWindows": []
+    }
+}
