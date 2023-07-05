@@ -5,6 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Cooperado } from './entities/cooperado.entity';
 import { CooperadoModule } from './modules/cooperado.module';
+import { BullModule } from '@nestjs/bull';
 
 @Module({
   imports: [
@@ -18,6 +19,12 @@ import { CooperadoModule } from './modules/cooperado.module';
       entities: [User, Cooperado],
       synchronize: true,
       autoLoadEntities: true,
+    }),
+    BullModule.forRoot({
+      redis: {
+        host: '127.0.0.1',
+        port: 6379,
+      },
     }),
     CooperadoModule,
   ],

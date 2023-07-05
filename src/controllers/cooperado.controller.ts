@@ -14,13 +14,16 @@ import {
   UploadedFile,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { Job } from 'bull';
 import { Response } from 'express';
+import { diskStorage } from 'multer';
 import { CreateCooperadoDto } from 'src/dtos/cooperado/create-cooperado.dto';
 import { UpdateCooperadoDto } from 'src/dtos/cooperado/update-cooperado.dto';
 import { PageOptionsDto } from 'src/dtos/page/page-options.dto';
 import { PageDto } from 'src/dtos/page/page.dto';
 import { Cooperado } from 'src/entities/cooperado.entity';
 import { CooperadoService } from 'src/services/cooperado.service';
+import { GetJobStatus } from 'src/utils/interfaces';
 
 @Controller('cooperado')
 export class CooperadoController {
@@ -41,7 +44,7 @@ export class CooperadoController {
 
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<Cooperado | Response> {
-    const cooperado = await this.cooperadoService.findOne(id);
+    const cooperado = await this.cooperadoService.findOne(+id);
 
     if (cooperado) return cooperado;
 
@@ -62,8 +65,26 @@ export class CooperadoController {
   }
 
   @Post('upload')
-  @UseInterceptors(FileInterceptor('file'))
-  uploadCooperado(@UploadedFile() file: Express.Multer.File) {
-    console.log(file);
+  @UseInterceptors(
+    FileInterceptor('file', {
+      dest: './uploads/cooperados',
+      preservePath: true,
+      storage: diskStorage({
+        filename: (req, file, cb) => cb(null, file.originalname),
+      }),
+    }),
+  )
+  async uploadCooperado(@UploadedFile() file: Express.Multer.File) {
+    const id = await this.cooperadoService.upload(file);
+
+    return {
+      id,
+      message: 'Arquivo enviado para processamento',
+    };
+  }
+
+  @Get('upload/:id')
+  async getJob(@Param('id') id: number): Promise<Job> {
+    return await this.cooperadoService.getJob(id);
   }
 }

@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 export enum TipoPessoa {
   PESSOA_JURIDICA = 'PJ',
@@ -6,33 +6,33 @@ export enum TipoPessoa {
 }
 
 @Entity({ name: 'cooperados' })
-export class Cooperado {
+export class Cooperado extends BaseEntity {
   @PrimaryGeneratedColumn('increment')
-  private id: number;
+  id: number;
 
   @Column()
-  private nome: string;
+  nome: string;
 
   @Column()
-  private cpfCnpj: string;
+  cpfCnpj: string;
 
   @Column()
-  private telefoneCelular: string;
+  telefoneCelular: string;
 
   @Column({ nullable: true })
-  private telefoneResidencial: string;
+  telefoneResidencial: string;
 
   @Column()
-  private pontoAtendimento: number;
+  pontoAtendimento: number;
 
   @Column()
-  private endereco: string;
+  endereco: string;
 
   @Column()
-  private cidade: string;
+  cidade: string;
 
   @Column()
-  private uf: string;
+  uf: string;
 
   @Column({
     type: 'decimal',
@@ -41,8 +41,8 @@ export class Cooperado {
     nullable: true,
     default: 0,
   })
-  private renda: number;
+  renda: number;
 
   @Column({ type: 'enum', enum: TipoPessoa })
-  private sigla: TipoPessoa;
+  sigla: TipoPessoa;
 }
