@@ -1,7 +1,5 @@
-import { InjectQueue } from '@nestjs/bull';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import Bull, { Job, Queue } from 'bull';
 import { PageMetaDto } from 'src/dtos/page/page-meto.dto';
 import { PageOptionsDto } from 'src/dtos/page/page-options.dto';
 import { PageDto } from 'src/dtos/page/page.dto';
@@ -13,7 +11,6 @@ export class CooperadoService {
   constructor(
     @InjectRepository(Cooperado)
     private cooperadoRepository: Repository<Cooperado>,
-    @InjectQueue('cooperado') private cooperadoQueue: Queue,
   ) {}
 
   async findAll(pageOptionsDto: PageOptionsDto): Promise<PageDto<Cooperado>> {
@@ -48,17 +45,5 @@ export class CooperadoService {
 
   async findOne(id: number): Promise<Cooperado> {
     return await this.cooperadoRepository.findOneBy({ id });
-  }
-
-  async upload(file: Express.Multer.File): Promise<Bull.JobId> {
-    const job = await this.cooperadoQueue.add('importar', {
-      arquivo: file,
-    });
-
-    return job.id;
-  }
-
-  async getJob(id: number): Promise<Job> {
-    return this.cooperadoQueue.getJob(id);
   }
 }

@@ -13,3 +13,12 @@ export class GetJobStatus {
   finishedOn: Date;
   processedOn: Date;
 }
+
+export enum JobStatus {
+  COMPLETED = 'completed',
+  WAITING = 'waiting',
+  ACTIVE = 'active',
+  DELAYED = 'delayed',
+  FAILED = 'failed',
+  PAUSED = 'paused',
+}

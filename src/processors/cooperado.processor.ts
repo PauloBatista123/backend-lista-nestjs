@@ -2,16 +2,26 @@ import {
   OnQueueActive,
   OnQueueCompleted,
   OnQueueError,
+  OnQueueFailed,
   OnQueueProgress,
   Process,
   Processor,
 } from '@nestjs/bull';
+import { InjectRepository } from '@nestjs/typeorm';
 import { Job } from 'bull';
 import { Cooperado, TipoPessoa } from 'src/entities/cooperado.entity';
+import { Importacao } from 'src/entities/importacao.entity';
+import { JobStatus } from 'src/utils/interfaces';
+import { Repository } from 'typeorm';
 import { readFile, utils } from 'xlsx';
 
 @Processor('cooperado')
 export class CooperadoConsumer {
+  constructor(
+    @InjectRepository(Importacao)
+    private importacaoRepository: Repository<Importacao>,
+  ) {}
+
   @Process('importar')
   async importar(job: Job<{ arquivo: Express.Multer.File }>) {
     const workbook = readFile(job.data.arquivo.path);
@@ -57,24 +67,57 @@ export class CooperadoConsumer {
   }
 
   @OnQueueActive()
-  onActive(job: Job) {
-    console.log(
-      `Processando job ${job.id} of type ${job.name} with data ${job.data}`,
-    );
+  async onActive(job: Job) {
+    const jobDatabase = await this.importacaoRepository.findOneBy({
+      jobId: job.id,
+    });
+
+    if (jobDatabase) {
+      jobDatabase.jobStatus = JobStatus.ACTIVE;
+      jobDatabase.save();
+    }
   }
 
   @OnQueueError()
-  onError(error: Error) {
+  async onError(error: Error) {
     console.error(`Um erro ocorreu: ${error}`);
   }
 
   @OnQueueProgress()
-  onProgress(job: Job, progress: number) {
-    console.log(`Carregando ${job.id} - ${progress}`);
+  async onProgress(job: Job, progress: number) {
+    const jobDatabase = await this.importacaoRepository.findOneBy({
+      jobId: job.id,
+    });
+
+    if (jobDatabase) {
+      jobDatabase.jobStatus = JobStatus.ACTIVE;
+      jobDatabase.jobRaws = progress;
+      jobDatabase.save();
+    }
   }
 
   @OnQueueCompleted()
-  onCompleted(job: Job) {
-    console.log(`Finalizado trabalho ${job.id}`);
+  async onCompleted(job: Job) {
+    const jobDatabase = await this.importacaoRepository.findOneBy({
+      jobId: job.id,
+    });
+
+    if (jobDatabase) {
+      jobDatabase.jobStatus = JobStatus.COMPLETED;
+      jobDatabase.save();
+    }
+  }
+
+  @OnQueueFailed()
+  async onFailed(job: Job, error: Error) {
+    console.log(error);
+    const jobDatabase = await this.importacaoRepository.findOneBy({
+      jobId: job.id,
+    });
+
+    if (jobDatabase) {
+      jobDatabase.jobStatus = JobStatus.FAILED;
+      jobDatabase.save();
+    }
   }
 }
