@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { PageMetaDto } from 'src/dtos/page/page-meto.dto';
 import { PageOptionsDto } from 'src/dtos/page/page-options.dto';
 import { PageDto } from 'src/dtos/page/page.dto';
+import { ProdutoAlterarDto } from 'src/dtos/produto/produto-alterar';
 import { ProdutoCriarDto } from 'src/dtos/produto/produto-criar';
 import { Produto } from 'src/entities/produto.entity';
 import { Repository } from 'typeorm';
@@ -34,6 +35,21 @@ export class ProdutoService {
     const produto = new Produto();
     produto.nome = produtoCriarDto.nome;
     produto.descricao = produtoCriarDto.descricao;
+    await produto.save();
+
+    return produto;
+  }
+
+  async update(
+    id: string,
+    produtoAlterarDto: ProdutoAlterarDto,
+  ): Promise<Produto> {
+    const produto = await this.produtoRepositoy.findOneBy({ id: +id });
+
+    if (produtoAlterarDto.descricao)
+      produto.descricao = produtoAlterarDto.descricao;
+    if (produtoAlterarDto.nome) produto.nome = produtoAlterarDto.nome;
+
     await produto.save();
 
     return produto;

@@ -4,11 +4,14 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  Param,
   Post,
+  Put,
   Query,
 } from '@nestjs/common';
 import { PageOptionsDto } from 'src/dtos/page/page-options.dto';
 import { PageDto } from 'src/dtos/page/page.dto';
+import { ProdutoAlterarDto } from 'src/dtos/produto/produto-alterar';
 import { ProdutoCriarDto } from 'src/dtos/produto/produto-criar';
 import { Produto } from 'src/entities/produto.entity';
 import { ProdutoService } from 'src/services/produto.service';
@@ -28,5 +31,13 @@ export class ProdutoController {
   @HttpCode(HttpStatus.CREATED)
   async create(@Body() produtoCriarDto: ProdutoCriarDto): Promise<Produto> {
     return await this.produtoService.create(produtoCriarDto);
+  }
+
+  @Put(':id')
+  async update(
+    @Param('id') id: string,
+    @Body() produtoAlterarDto: ProdutoAlterarDto,
+  ) {
+    return await this.produtoService.update(id, produtoAlterarDto);
   }
 }
