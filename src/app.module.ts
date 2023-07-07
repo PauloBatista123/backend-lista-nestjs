@@ -9,6 +9,7 @@ import { BullModule } from '@nestjs/bull';
 import { Produto } from './entities/produto.entity';
 import { ProdutoModule } from './modules/produto.module';
 import { ImportacaoModule } from './modules/importacao.module';
+import { PontoAtendimentoModule } from './modules/ponto-atendimento.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { ImportacaoModule } from './modules/importacao.module';
     CooperadoModule,
     ProdutoModule,
     ImportacaoModule,
+    PontoAtendimentoModule,
   ],
   controllers: [AppController],
   providers: [AppService],

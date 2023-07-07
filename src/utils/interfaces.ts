@@ -22,3 +22,23 @@ export enum JobStatus {
   FAILED = 'failed',
   PAUSED = 'paused',
 }
+
+export enum ImportacaoTabelaEnum {
+  COOPERADO = 'cooperado',
+  CARTAO = 'cartao',
+}
+
+export const headerFileCooperado = [
+  'nome',
+  'cpfCnpj',
+  'telefoneCelular',
+  'telefoneResidencial',
+  'pontoAtendimento',
+  'endereco',
+  'cidade',
+  'uf',
+  'renda',
+  'sigla',
+];
+
+export const headerFileProdutoCartao = [];

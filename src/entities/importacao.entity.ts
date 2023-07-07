@@ -1,5 +1,8 @@
 import { JobId, JobStatus } from 'bull';
-import { JobStatus as JobStatusEnum } from 'src/utils/interfaces';
+import {
+  ImportacaoTabelaEnum,
+  JobStatus as JobStatusEnum,
+} from 'src/utils/interfaces';
 import {
   BaseEntity,
   Column,
@@ -22,6 +25,9 @@ export class Importacao extends BaseEntity {
 
   @Column({ type: 'enum', enum: JobStatusEnum, default: JobStatusEnum.ACTIVE })
   jobStatus: JobStatus;
+
+  @Column({ type: 'enum', enum: ImportacaoTabelaEnum })
+  tabela: ImportacaoTabelaEnum;
 
   @CreateDateColumn()
   created_at: Date;

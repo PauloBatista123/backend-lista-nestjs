@@ -6,10 +6,12 @@ import {
   UseInterceptors,
   UploadedFile,
   Query,
+  Body,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Job, JobCounts } from 'bull';
 import { diskStorage } from 'multer';
+import { ImportacaoDto } from 'src/dtos/importacao/importar.dto';
 import { PageOptionsDto } from 'src/dtos/page/page-options.dto';
 import { PageDto } from 'src/dtos/page/page.dto';
 import { Importacao } from 'src/entities/importacao.entity';
@@ -19,7 +21,7 @@ import { ImportacaoService } from 'src/services/importacao.service';
 export class ImportacaoController {
   constructor(private importacaoService: ImportacaoService) {}
 
-  @Post('upload/cooperado')
+  @Post('upload')
   @UseInterceptors(
     FileInterceptor('file', {
       dest: './uploads/cooperados',
@@ -32,8 +34,14 @@ export class ImportacaoController {
   async uploadCooperado(
     @UploadedFile()
     file: Express.Multer.File,
+    @Body() bodyImportacao: ImportacaoDto,
   ) {
-    const id = await this.importacaoService.upload(file);
+    await this.importacaoService.validateFileReader(
+      file,
+      bodyImportacao.tabela,
+    );
+
+    const id = await this.importacaoService.upload(file, bodyImportacao.tabela);
 
     return {
       id,
