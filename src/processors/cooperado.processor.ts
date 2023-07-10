@@ -9,8 +9,7 @@ import {
 } from '@nestjs/bull';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Job } from 'bull';
-import { Cooperado, TipoPessoa } from 'src/entities/cooperado.entity';
-import { Importacao } from 'src/entities/importacao.entity';
+import { Cooperado, Importacao, TipoPessoa } from 'src/entities';
 import { JobStatus } from 'src/utils/interfaces';
 import { Repository } from 'typeorm';
 import { readFile, utils } from 'xlsx';

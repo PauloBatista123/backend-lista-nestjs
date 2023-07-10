@@ -8,10 +8,9 @@ import {
   HttpException,
 } from '@nestjs/common';
 import { Response } from 'express';
-import { PageOptionsDto } from 'src/dtos/page/page-options.dto';
-import { PageDto } from 'src/dtos/page/page.dto';
-import { Cooperado } from 'src/entities/cooperado.entity';
-import { CooperadoService } from 'src/services/cooperado.service';
+import { PageDto, PageOptionsDto } from 'src/dtos/page';
+import { Cooperado } from 'src/entities';
+import { CooperadoService } from 'src/services';
 
 @Controller('cooperado')
 export class CooperadoController {

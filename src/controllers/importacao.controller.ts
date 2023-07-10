@@ -7,15 +7,16 @@ import {
   UploadedFile,
   Query,
   Body,
+  ParseFilePipeBuilder,
+  HttpStatus,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Job, JobCounts } from 'bull';
 import { diskStorage } from 'multer';
 import { ImportacaoDto } from 'src/dtos/importacao/importar.dto';
-import { PageOptionsDto } from 'src/dtos/page/page-options.dto';
-import { PageDto } from 'src/dtos/page/page.dto';
-import { Importacao } from 'src/entities/importacao.entity';
-import { ImportacaoService } from 'src/services/importacao.service';
+import { PageDto, PageOptionsDto } from 'src/dtos/page';
+import { Importacao } from 'src/entities';
+import { ImportacaoService } from 'src/services';
 
 @Controller('importacao')
 export class ImportacaoController {
@@ -32,7 +33,14 @@ export class ImportacaoController {
     }),
   )
   async uploadCooperado(
-    @UploadedFile()
+    @UploadedFile(
+      new ParseFilePipeBuilder()
+        .addFileTypeValidator({
+          fileType:
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        })
+        .build({ errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY }),
+    )
     file: Express.Multer.File,
     @Body() bodyImportacao: ImportacaoDto,
   ) {

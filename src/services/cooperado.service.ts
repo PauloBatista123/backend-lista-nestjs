@@ -1,16 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { PageMetaDto } from 'src/dtos/page/page-meto.dto';
-import { PageOptionsDto } from 'src/dtos/page/page-options.dto';
-import { PageDto } from 'src/dtos/page/page.dto';
-import { Cooperado } from 'src/entities/cooperado.entity';
-import { Repository } from 'typeorm';
+import { PageDto, PageMetaDto, PageOptionsDto } from 'src/dtos/page';
+import { Cooperado } from 'src/entities';
+import { CooperadoRepository } from 'src/repositories';
 
 @Injectable()
 export class CooperadoService {
   constructor(
-    @InjectRepository(Cooperado)
-    private cooperadoRepository: Repository<Cooperado>,
+    @InjectRepository(CooperadoRepository)
+    private cooperadoRepository: CooperadoRepository,
   ) {}
 
   async findAll(pageOptionsDto: PageOptionsDto): Promise<PageDto<Cooperado>> {

@@ -1,18 +1,15 @@
 import { InjectQueue } from '@nestjs/bull';
-import { BadRequestException, HttpException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import Bull, { Job, JobCounts, Queue } from 'bull';
-import { ImportacaoDto } from 'src/dtos/importacao/importar.dto';
-import { PageMetaDto } from 'src/dtos/page/page-meto.dto';
-import { PageOptionsDto } from 'src/dtos/page/page-options.dto';
-import { PageDto } from 'src/dtos/page/page.dto';
-import { Importacao } from 'src/entities/importacao.entity';
+import { PageDto, PageMetaDto, PageOptionsDto } from 'src/dtos/page';
+import { Importacao } from 'src/entities';
 import {
   ImportacaoTabelaEnum,
   JobStatus,
   headerFileCooperado,
 } from 'src/utils/interfaces';
-import { QueryBuilder, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { readFile, utils } from 'xlsx';
 
 @Injectable()

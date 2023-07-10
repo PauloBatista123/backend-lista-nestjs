@@ -4,16 +4,17 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { PageDto, PageMetaDto, PageOptionsDto } from 'src/dtos/page';
 import { PontoAtendimentoCreateDto } from 'src/dtos/ponto-atendimento/ponto-atendimento-create';
 import { PontoAtendimentoUpdateDto } from 'src/dtos/ponto-atendimento/ponto-atendimento-update';
-import { PontoAtendimento } from 'src/entities/pontoAtendimento.entity';
-import { Repository } from 'typeorm';
+import { PontoAtendimento } from 'src/entities';
+import { PontoAtendimentoRespository } from 'src/repositories';
 
 @Injectable()
 export class PontoAtendimentoService {
   constructor(
-    @InjectRepository(PontoAtendimento)
-    private pontoAtendimentoRepository: Repository<PontoAtendimento>,
+    @InjectRepository(PontoAtendimentoRespository)
+    private pontoAtendimentoRepository: PontoAtendimentoRespository,
   ) {}
 
   async create(
@@ -50,5 +51,28 @@ export class PontoAtendimentoService {
         'O registro que você está tentando alterar não existe',
       );
     }
+  }
+
+  async findall(
+    pageOptionsDto: PageOptionsDto,
+  ): Promise<PageDto<PontoAtendimento>> {
+    const queryBuilder =
+      this.pontoAtendimentoRepository.createQueryBuilder('pontoAtendimento');
+
+    queryBuilder
+      .take(pageOptionsDto.take)
+      .skip(pageOptionsDto.skip)
+      .orderBy('pontoAtendimento.id');
+
+    const itemCount = await queryBuilder.getCount();
+    const { entities } = await queryBuilder.getRawAndEntities();
+
+    const pageMeta = new PageMetaDto({ pageOptionsDto, itemCount });
+
+    return new PageDto(entities, pageMeta);
+  }
+
+  async findById(id: number): Promise<PontoAtendimento> {
+    return await this.pontoAtendimentoRepository.findOneBy({ id });
   }
 }

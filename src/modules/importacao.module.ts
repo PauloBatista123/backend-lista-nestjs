@@ -1,7 +1,7 @@
 import { BullModule } from '@nestjs/bull';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ImportacaoController } from 'src/controllers/importacao.controller';
+import { ImportacaoController } from 'src/controllers';
 import { Importacao } from 'src/entities/importacao.entity';
 import { CooperadoConsumer } from 'src/processors/cooperado.processor';
 import { ImportacaoService } from 'src/services/importacao.service';

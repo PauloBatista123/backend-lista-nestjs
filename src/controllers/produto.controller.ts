@@ -9,12 +9,11 @@ import {
   Put,
   Query,
 } from '@nestjs/common';
-import { PageOptionsDto } from 'src/dtos/page/page-options.dto';
-import { PageDto } from 'src/dtos/page/page.dto';
+import { PageDto, PageOptionsDto } from 'src/dtos/page';
 import { ProdutoAlterarDto } from 'src/dtos/produto/produto-alterar';
 import { ProdutoCriarDto } from 'src/dtos/produto/produto-criar';
-import { Produto } from 'src/entities/produto.entity';
-import { ProdutoService } from 'src/services/produto.service';
+import { Produto } from 'src/entities';
+import { ProdutoService } from 'src/services';
 
 @Controller('produto')
 export class ProdutoController {

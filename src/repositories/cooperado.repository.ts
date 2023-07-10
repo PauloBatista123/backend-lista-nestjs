@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Cooperado } from 'src/entities/cooperado.entity';
+import { Cooperado } from 'src/entities';
 import { Repository } from 'typeorm';
 
 @Injectable()

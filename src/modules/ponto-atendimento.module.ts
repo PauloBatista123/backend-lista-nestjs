@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { PontoAtendimentoController } from 'src/controllers/ponto-atendimento.controller';
-import { PontoAtendimento } from 'src/entities/pontoAtendimento.entity';
-import { PontoAtendimentoService } from 'src/services/ponto-atendimento.service';
+import { PontoAtendimentoController } from 'src/controllers';
+import { PontoAtendimentoRespository } from 'src/repositories';
+import { PontoAtendimentoService } from 'src/services';
 
 @Module({
   controllers: [PontoAtendimentoController],
   providers: [PontoAtendimentoService],
-  imports: [TypeOrmModule.forFeature([PontoAtendimento])],
+  imports: [TypeOrmModule.forFeature([PontoAtendimentoRespository])],
 })
 export class PontoAtendimentoModule {}

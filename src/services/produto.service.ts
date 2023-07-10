@@ -1,11 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { PageMetaDto } from 'src/dtos/page/page-meto.dto';
-import { PageOptionsDto } from 'src/dtos/page/page-options.dto';
-import { PageDto } from 'src/dtos/page/page.dto';
+import { PageDto, PageMetaDto, PageOptionsDto } from 'src/dtos/page';
 import { ProdutoAlterarDto } from 'src/dtos/produto/produto-alterar';
 import { ProdutoCriarDto } from 'src/dtos/produto/produto-criar';
-import { Produto } from 'src/entities/produto.entity';
+import { Produto } from 'src/entities';
 import { Repository } from 'typeorm';
 
 @Injectable()
