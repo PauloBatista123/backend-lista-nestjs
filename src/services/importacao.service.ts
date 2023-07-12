@@ -4,11 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import Bull, { Job, JobCounts, Queue } from 'bull';
 import { PageDto, PageMetaDto, PageOptionsDto } from 'src/dtos/page';
 import { Importacao } from 'src/entities';
-import {
-  ImportacaoTabelaEnum,
-  JobStatus,
-  headerFileCooperado,
-} from 'src/utils/interfaces';
+import { ImportacaoTabelaEnum, JobStatus, headerFileCooperado, headerFileProdutoCartao } from 'src/utils/interfaces';
 import { Repository } from 'typeorm';
 import { readFile, utils } from 'xlsx';
 
@@ -19,13 +15,21 @@ export class ImportacaoService {
     private importacaoRepository: Repository<Importacao>,
     @InjectQueue('cooperado')
     private cooperadoQueue: Queue,
+    @InjectQueue('produto-cartao')
+    private produtoCartaoQueue: Queue,
   ) {}
 
-  async create(job: Job): Promise<Importacao> {
+  async create(job: Job, tabela: string): Promise<Importacao> {
     const importacao = new Importacao();
     importacao.jobId = Number(job.id);
     importacao.jobStatus = JobStatus.ACTIVE;
     importacao.jobRaws = 0;
+    importacao.tabela =
+      ImportacaoTabelaEnum[
+        Object.keys(ImportacaoTabelaEnum)[
+          Object.values(ImportacaoTabelaEnum).indexOf(tabela as unknown as ImportacaoTabelaEnum)
+        ]
+      ];
     return await importacao.save();
   }
 
@@ -37,26 +41,56 @@ export class ImportacaoService {
       header: 1,
     })[0];
 
-    if (tabela === ImportacaoTabelaEnum.COOPERADO) {
-      if (JSON.stringify(columnsArray) !== JSON.stringify(headerFileCooperado))
-        throw new BadRequestException(
-          `O cabeçalho do arquivo deve conter: ${headerFileCooperado.toString()}`,
-        );
+    switch (tabela) {
+      case ImportacaoTabelaEnum.COOPERADO:
+        if (JSON.stringify(columnsArray) !== JSON.stringify(headerFileCooperado))
+          throw new BadRequestException(`O cabeçalho do arquivo deve conter: ${headerFileCooperado.toString()}`);
+        break;
+      case ImportacaoTabelaEnum.CARTAO:
+        if (JSON.stringify(columnsArray) !== JSON.stringify(headerFileProdutoCartao))
+          throw new BadRequestException(`O cabeçalho do arquivo deve conter: ${headerFileProdutoCartao.toString()}`);
+        break;
+      default:
+        throw new BadRequestException(`Não econtramos o tipo de importação: ${ImportacaoTabelaEnum.toString()}`);
     }
   }
 
   async upload(file: Express.Multer.File, tabela: string): Promise<Bull.JobId> {
-    const jobQueue = await this.cooperadoQueue.add('importar', {
-      arquivo: file,
-    });
-
-    await this.create(jobQueue);
-
-    return jobQueue.id;
+    switch (tabela) {
+      case ImportacaoTabelaEnum.CARTAO:
+        const jobQueueCartao = await this.produtoCartaoQueue.add('importar', {
+          arquivo: file,
+          tabela,
+        });
+        await this.create(jobQueueCartao, ImportacaoTabelaEnum.CARTAO);
+        return jobQueueCartao.id;
+      case ImportacaoTabelaEnum.COOPERADO:
+        const jobQueueCooperado = await this.cooperadoQueue.add('importar', {
+          arquivo: file,
+          tabela,
+        });
+        await this.create(jobQueueCooperado, ImportacaoTabelaEnum.COOPERADO);
+        return jobQueueCooperado.id;
+      default:
+        throw new BadRequestException('A tabela não foi encontrada');
+    }
   }
 
   async getJobById(id: number): Promise<Job> {
-    return this.cooperadoQueue.getJob(id);
+    try {
+      const jobDatabase = await this.importacaoRepository.findOneByOrFail({ id });
+
+      switch (jobDatabase.tabela) {
+        case ImportacaoTabelaEnum.CARTAO:
+          return this.produtoCartaoQueue.getJob(jobDatabase.jobId);
+        case ImportacaoTabelaEnum.COOPERADO:
+          return this.cooperadoQueue.getJob(jobDatabase.jobId);
+        default:
+          throw new BadRequestException('A tabela não foi encontrada');
+      }
+    } catch (error) {
+      throw new BadRequestException(`Ocorreu um erro ao realizar a busca: Não encontramos registro com o id ${id}`);
+    }
   }
 
   async getJobCounts(): Promise<JobCounts> {
@@ -64,13 +98,9 @@ export class ImportacaoService {
   }
 
   async getJob(pageOptionsDto: PageOptionsDto): Promise<PageDto<Importacao>> {
-    const queryBuilder =
-      this.importacaoRepository.createQueryBuilder('importacao');
+    const queryBuilder = this.importacaoRepository.createQueryBuilder('importacao');
 
-    queryBuilder
-      .take(pageOptionsDto.take)
-      .skip(pageOptionsDto.skip)
-      .orderBy('importacao.id', 'DESC');
+    queryBuilder.take(pageOptionsDto.take).skip(pageOptionsDto.skip).orderBy('importacao.id', 'DESC');
 
     const itemCount = await queryBuilder.getCount();
 

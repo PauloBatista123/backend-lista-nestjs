@@ -41,4 +41,18 @@ export const headerFileCooperado = [
   'sigla',
 ];
 
-export const headerFileProdutoCartao = [];
+export const headerFileProdutoCartao = [
+  'pontoAtendimentoId',
+  'cooperadoCpfCnpj',
+  'contaCartao',
+  'dataAberturaContaCartao',
+  'limiteAtribuido',
+  'limiteAprovadoFabrica',
+  'produtoId',
+];
+
+export enum ProdutoStatusEnum {
+  ABERTO = 'aberto',
+  PENDENTE = 'pendente',
+  FINALIZADO = 'finalizado',
+}

@@ -16,10 +16,7 @@ export class ProdutoService {
   async findAll(pageOptionsDto: PageOptionsDto): Promise<PageDto<Produto>> {
     const queryBuilder = this.produtoRepositoy.createQueryBuilder('produto');
 
-    queryBuilder
-      .take(pageOptionsDto.take)
-      .skip(pageOptionsDto.skip)
-      .orderBy('produto.id');
+    queryBuilder.take(pageOptionsDto.take).skip(pageOptionsDto.skip).orderBy('produto.id');
 
     const itemCount = await queryBuilder.getCount();
     const { entities } = await queryBuilder.getRawAndEntities();
@@ -38,14 +35,10 @@ export class ProdutoService {
     return produto;
   }
 
-  async update(
-    id: string,
-    produtoAlterarDto: ProdutoAlterarDto,
-  ): Promise<Produto> {
+  async update(id: string, produtoAlterarDto: ProdutoAlterarDto): Promise<Produto> {
     const produto = await this.produtoRepositoy.findOneBy({ id: +id });
 
-    if (produtoAlterarDto.descricao)
-      produto.descricao = produtoAlterarDto.descricao;
+    if (produtoAlterarDto.descricao) produto.descricao = produtoAlterarDto.descricao;
     if (produtoAlterarDto.nome) produto.nome = produtoAlterarDto.nome;
 
     await produto.save();

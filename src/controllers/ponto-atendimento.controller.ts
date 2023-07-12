@@ -10,25 +10,18 @@ export class PontoAtendimentoController {
   constructor(private pontoAtendimentoService: PontoAtendimentoService) {}
 
   @Post()
-  async create(
-    @Body() pontoAtendimentoDto: PontoAtendimentoCreateDto,
-  ): Promise<PontoAtendimento> {
+  async create(@Body() pontoAtendimentoDto: PontoAtendimentoCreateDto): Promise<PontoAtendimento> {
     return await this.pontoAtendimentoService.create(pontoAtendimentoDto);
   }
 
   @Put(':id')
-  async update(
-    @Body() pontoAtendimentoDto: PontoAtendimentoUpdateDto,
-    @Param('id') id: number,
-  ) {
+  async update(@Body() pontoAtendimentoDto: PontoAtendimentoUpdateDto, @Param('id') id: number) {
     return await this.pontoAtendimentoService.update(pontoAtendimentoDto, id);
   }
 
   @Get()
-  async findAll(
-    @Query() pageOptionsDto: PageOptionsDto,
-  ): Promise<PageDto<PontoAtendimento>> {
-    return await this.pontoAtendimentoService.findall(pageOptionsDto);
+  async findAll(@Query() pageOptionsDto: PageOptionsDto): Promise<PageDto<PontoAtendimento>> {
+    return await this.pontoAtendimentoService.findAll(pageOptionsDto);
   }
 
   @Get(':id')

@@ -1,11 +1,5 @@
-import {
-  BaseEntity,
-  Column,
-  CreateDateColumn,
-  Entity,
-  PrimaryColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { BaseEntity, Column, CreateDateColumn, Entity, ManyToOne, PrimaryColumn, UpdateDateColumn } from 'typeorm';
+import { ProdutoCartao } from './produto-cartao.entity';
 
 @Entity('pontoAtendimento')
 export class PontoAtendimento extends BaseEntity {
@@ -23,4 +17,7 @@ export class PontoAtendimento extends BaseEntity {
 
   @UpdateDateColumn({ type: 'datetime' })
   updated_at: Date;
+
+  @ManyToOne(() => ProdutoCartao, (produtoCartao) => produtoCartao.pontoAtendimento)
+  cartoes: ProdutoCartao[];
 }

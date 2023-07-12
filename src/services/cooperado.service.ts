@@ -12,8 +12,7 @@ export class CooperadoService {
   ) {}
 
   async findAll(pageOptionsDto: PageOptionsDto): Promise<PageDto<Cooperado>> {
-    const queryBuilder =
-      this.cooperadoRepository.createQueryBuilder('cooperado');
+    const queryBuilder = this.cooperadoRepository.createQueryBuilder('cooperado');
 
     if (pageOptionsDto.nome) {
       queryBuilder.where('cooperado.nome like :nome', {
@@ -27,10 +26,7 @@ export class CooperadoService {
       });
     }
 
-    queryBuilder
-      .orderBy('cooperado.id')
-      .skip(pageOptionsDto.skip)
-      .take(pageOptionsDto.take);
+    queryBuilder.orderBy('cooperado.id').skip(pageOptionsDto.skip).take(pageOptionsDto.take);
 
     const itemCount = await queryBuilder.getCount();
 

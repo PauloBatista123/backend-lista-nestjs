@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { Cooperado } from 'src/entities';
+import { Produto } from 'src/entities';
 import { DataSource, Repository } from 'typeorm';
 
 @Injectable()
-export class CooperadoRepository extends Repository<Cooperado> {
+export class ProdutoRepository extends Repository<Produto> {
   constructor(private dataSource: DataSource) {
-    super(Cooperado, dataSource.createEntityManager());
+    super(Produto, dataSource.createEntityManager());
   }
 }

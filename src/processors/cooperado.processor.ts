@@ -27,20 +27,11 @@ export class CooperadoConsumer {
     const worksheet = workbook.Sheets[workbook.SheetNames[0]];
     const range = utils.decode_range(worksheet['!ref']);
 
-    for (
-      let numeroLinha = range.s.r + 1;
-      numeroLinha <= range.e.r;
-      numeroLinha++
-    ) {
+    for (let numeroLinha = range.s.r + 1; numeroLinha <= range.e.r; numeroLinha++) {
       const cooperado = new Cooperado();
 
-      for (
-        let numeroColunas = range.s.c;
-        numeroColunas <= range.e.c;
-        numeroColunas++
-      ) {
-        const cell =
-          worksheet[utils.encode_cell({ r: numeroLinha, c: numeroColunas })];
+      for (let numeroColunas = range.s.c; numeroColunas <= range.e.c; numeroColunas++) {
+        const cell = worksheet[utils.encode_cell({ r: numeroLinha, c: numeroColunas })];
 
         if (cell) {
           if (numeroColunas === 0) cooperado.nome = cell.v;
@@ -53,10 +44,7 @@ export class CooperadoConsumer {
           if (numeroColunas === 7) cooperado.uf = cell.v;
           if (numeroColunas === 8) cooperado.renda = cell.v;
           if (numeroColunas === 9) {
-            cooperado.sigla =
-              cell.v === 'PJ'
-                ? TipoPessoa.PESSOA_JURIDICA
-                : TipoPessoa.PESSOA_FISICA;
+            cooperado.sigla = cell.v === 'PJ' ? TipoPessoa.PESSOA_JURIDICA : TipoPessoa.PESSOA_FISICA;
           }
         }
       }

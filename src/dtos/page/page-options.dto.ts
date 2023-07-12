@@ -1,13 +1,5 @@
 import { Transform } from 'class-transformer';
-import {
-  IsEnum,
-  IsInt,
-  IsOptional,
-  IsString,
-  Max,
-  Min,
-  MinLength,
-} from 'class-validator';
+import { IsEnum, IsInt, IsOptional, IsString, Max, Min, MinLength } from 'class-validator';
 import { TipoPessoa } from 'src/entities/cooperado.entity';
 
 export enum Order {

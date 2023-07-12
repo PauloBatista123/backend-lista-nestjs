@@ -36,18 +36,14 @@ export class ImportacaoController {
     @UploadedFile(
       new ParseFilePipeBuilder()
         .addFileTypeValidator({
-          fileType:
-            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+          fileType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         })
         .build({ errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY }),
     )
     file: Express.Multer.File,
     @Body() bodyImportacao: ImportacaoDto,
   ) {
-    await this.importacaoService.validateFileReader(
-      file,
-      bodyImportacao.tabela,
-    );
+    await this.importacaoService.validateFileReader(file, bodyImportacao.tabela);
 
     const id = await this.importacaoService.upload(file, bodyImportacao.tabela);
 
@@ -68,9 +64,7 @@ export class ImportacaoController {
   }
 
   @Get('upload')
-  async getJobs(
-    @Query() pageOptiosDto: PageOptionsDto,
-  ): Promise<PageDto<Importacao>> {
+  async getJobs(@Query() pageOptiosDto: PageOptionsDto): Promise<PageDto<Importacao>> {
     return await this.importacaoService.getJob(pageOptiosDto);
   }
 }

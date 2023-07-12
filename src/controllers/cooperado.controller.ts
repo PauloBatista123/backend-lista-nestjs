@@ -1,12 +1,4 @@
-import {
-  Controller,
-  Get,
-  Param,
-  HttpCode,
-  HttpStatus,
-  Query,
-  HttpException,
-} from '@nestjs/common';
+import { Controller, Get, Param, HttpCode, HttpStatus, Query, HttpException } from '@nestjs/common';
 import { Response } from 'express';
 import { PageDto, PageOptionsDto } from 'src/dtos/page';
 import { Cooperado } from 'src/entities';
