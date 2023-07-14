@@ -1,5 +1,5 @@
 import { JobId, JobStatus } from 'bull';
-import { ImportacaoTabelaEnum, JobStatus as JobStatusEnum } from 'src/utils/interfaces';
+import { ProdutosTabelaEnum, JobStatus as JobStatusEnum } from 'src/utils/interfaces';
 import { BaseEntity, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity('importacao')
@@ -16,8 +16,8 @@ export class Importacao extends BaseEntity {
   @Column({ type: 'enum', enum: JobStatusEnum, default: JobStatusEnum.ACTIVE })
   jobStatus: JobStatus;
 
-  @Column({ type: 'enum', enum: ImportacaoTabelaEnum })
-  tabela: ImportacaoTabelaEnum;
+  @Column({ type: 'enum', enum: ProdutosTabelaEnum })
+  tabela: ProdutosTabelaEnum;
 
   @CreateDateColumn()
   created_at: Date;

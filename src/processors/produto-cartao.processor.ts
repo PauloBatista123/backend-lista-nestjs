@@ -14,7 +14,7 @@ import { CooperadoRepository, PontoAtendimentoRespository } from 'src/repositori
 import { ImportacaoRepository } from 'src/repositories/importacao.repository';
 import { ProdutoCartaoRepository } from 'src/repositories/produto-cartao.repository';
 import { ProdutoRepository } from 'src/repositories/produto.repository';
-import { ImportacaoTabelaEnum, JobStatus } from 'src/utils/interfaces';
+import { ProdutosTabelaEnum, JobStatus } from 'src/utils/interfaces';
 import { readFile, utils } from 'xlsx';
 
 @Processor('produto-cartao')
@@ -74,7 +74,7 @@ export class ProdutoCartaoConsumer {
   async onActive(job: Job) {
     const jobDatabase = await this.importacaoRepository.findOneBy({
       jobId: job.id,
-      tabela: ImportacaoTabelaEnum.CARTAO,
+      tabela: ProdutosTabelaEnum.CARTAO,
     });
     if (jobDatabase) {
       jobDatabase.jobStatus = JobStatus.ACTIVE;
@@ -91,7 +91,7 @@ export class ProdutoCartaoConsumer {
   async onProgress(job: Job, progress: number) {
     const jobDatabase = await this.importacaoRepository.findOneBy({
       jobId: job.id,
-      tabela: ImportacaoTabelaEnum.CARTAO,
+      tabela: ProdutosTabelaEnum.CARTAO,
     });
 
     if (jobDatabase) {
@@ -105,7 +105,7 @@ export class ProdutoCartaoConsumer {
   async onCompleted(job: Job) {
     const jobDatabase = await this.importacaoRepository.findOneBy({
       jobId: job.id,
-      tabela: ImportacaoTabelaEnum.CARTAO,
+      tabela: ProdutosTabelaEnum.CARTAO,
     });
 
     console.log(jobDatabase);
@@ -121,7 +121,7 @@ export class ProdutoCartaoConsumer {
     console.log(error);
     const jobDatabase = await this.importacaoRepository.findOneBy({
       jobId: job.id,
-      tabela: ImportacaoTabelaEnum.CARTAO,
+      tabela: ProdutosTabelaEnum.CARTAO,
     });
 
     if (jobDatabase) {

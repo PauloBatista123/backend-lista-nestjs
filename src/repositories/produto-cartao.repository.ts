@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { PageDto, PageMetaDto, PageOptionsDto } from 'src/dtos/page';
 import { ProdutoCartao } from 'src/entities';
 import { DataSource, Repository } from 'typeorm';
 

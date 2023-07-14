@@ -4,7 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import Bull, { Job, JobCounts, Queue } from 'bull';
 import { PageDto, PageMetaDto, PageOptionsDto } from 'src/dtos/page';
 import { Importacao } from 'src/entities';
-import { ImportacaoTabelaEnum, JobStatus, headerFileCooperado, headerFileProdutoCartao } from 'src/utils/interfaces';
+import { ProdutosTabelaEnum, JobStatus, headerFileCooperado, headerFileProdutoCartao } from 'src/utils/interfaces';
 import { Repository } from 'typeorm';
 import { readFile, utils } from 'xlsx';
 
@@ -25,9 +25,9 @@ export class ImportacaoService {
     importacao.jobStatus = JobStatus.ACTIVE;
     importacao.jobRaws = 0;
     importacao.tabela =
-      ImportacaoTabelaEnum[
-        Object.keys(ImportacaoTabelaEnum)[
-          Object.values(ImportacaoTabelaEnum).indexOf(tabela as unknown as ImportacaoTabelaEnum)
+      ProdutosTabelaEnum[
+        Object.keys(ProdutosTabelaEnum)[
+          Object.values(ProdutosTabelaEnum).indexOf(tabela as unknown as ProdutosTabelaEnum)
         ]
       ];
     return await importacao.save();
@@ -42,34 +42,34 @@ export class ImportacaoService {
     })[0];
 
     switch (tabela) {
-      case ImportacaoTabelaEnum.COOPERADO:
+      case ProdutosTabelaEnum.COOPERADO:
         if (JSON.stringify(columnsArray) !== JSON.stringify(headerFileCooperado))
           throw new BadRequestException(`O cabeçalho do arquivo deve conter: ${headerFileCooperado.toString()}`);
         break;
-      case ImportacaoTabelaEnum.CARTAO:
+      case ProdutosTabelaEnum.CARTAO:
         if (JSON.stringify(columnsArray) !== JSON.stringify(headerFileProdutoCartao))
           throw new BadRequestException(`O cabeçalho do arquivo deve conter: ${headerFileProdutoCartao.toString()}`);
         break;
       default:
-        throw new BadRequestException(`Não econtramos o tipo de importação: ${ImportacaoTabelaEnum.toString()}`);
+        throw new BadRequestException(`Não econtramos o tipo de importação: ${ProdutosTabelaEnum.toString()}`);
     }
   }
 
   async upload(file: Express.Multer.File, tabela: string): Promise<Bull.JobId> {
     switch (tabela) {
-      case ImportacaoTabelaEnum.CARTAO:
+      case ProdutosTabelaEnum.CARTAO:
         const jobQueueCartao = await this.produtoCartaoQueue.add('importar', {
           arquivo: file,
           tabela,
         });
-        await this.create(jobQueueCartao, ImportacaoTabelaEnum.CARTAO);
+        await this.create(jobQueueCartao, ProdutosTabelaEnum.CARTAO);
         return jobQueueCartao.id;
-      case ImportacaoTabelaEnum.COOPERADO:
+      case ProdutosTabelaEnum.COOPERADO:
         const jobQueueCooperado = await this.cooperadoQueue.add('importar', {
           arquivo: file,
           tabela,
         });
-        await this.create(jobQueueCooperado, ImportacaoTabelaEnum.COOPERADO);
+        await this.create(jobQueueCooperado, ProdutosTabelaEnum.COOPERADO);
         return jobQueueCooperado.id;
       default:
         throw new BadRequestException('A tabela não foi encontrada');
@@ -81,9 +81,9 @@ export class ImportacaoService {
       const jobDatabase = await this.importacaoRepository.findOneByOrFail({ id });
 
       switch (jobDatabase.tabela) {
-        case ImportacaoTabelaEnum.CARTAO:
+        case ProdutosTabelaEnum.CARTAO:
           return this.produtoCartaoQueue.getJob(jobDatabase.jobId);
-        case ImportacaoTabelaEnum.COOPERADO:
+        case ProdutosTabelaEnum.COOPERADO:
           return this.cooperadoQueue.getJob(jobDatabase.jobId);
         default:
           throw new BadRequestException('A tabela não foi encontrada');

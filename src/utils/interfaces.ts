@@ -23,7 +23,7 @@ export enum JobStatus {
   PAUSED = 'paused',
 }
 
-export enum ImportacaoTabelaEnum {
+export enum ProdutosTabelaEnum {
   COOPERADO = 'cooperado',
   CARTAO = 'cartao',
 }

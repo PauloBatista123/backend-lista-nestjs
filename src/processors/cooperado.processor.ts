@@ -11,7 +11,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Job } from 'bull';
 import { Cooperado, Importacao, TipoPessoa } from 'src/entities';
 import { JobStatus } from 'src/utils/interfaces';
-import { Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { readFile, utils } from 'xlsx';
 
 @Processor('cooperado')
@@ -19,6 +19,7 @@ export class CooperadoConsumer {
   constructor(
     @InjectRepository(Importacao)
     private importacaoRepository: Repository<Importacao>,
+    private dataSource: DataSource,
   ) {}
 
   @Process('importar')

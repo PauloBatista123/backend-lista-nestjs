@@ -1,9 +1,9 @@
 import { IsEnum } from 'class-validator';
-import { ImportacaoTabelaEnum } from 'src/utils/interfaces';
+import { ProdutosTabelaEnum } from 'src/utils/interfaces';
 
 export class ImportacaoDto {
-  @IsEnum(ImportacaoTabelaEnum, {
-    message: `É obrigatório informar o tipo de importação: ${Object.values(ImportacaoTabelaEnum).toString()}`,
+  @IsEnum(ProdutosTabelaEnum, {
+    message: `É obrigatório informar o tipo de importação: ${Object.values(ProdutosTabelaEnum).toString()}`,
   })
-  tabela: ImportacaoTabelaEnum;
+  tabela: ProdutosTabelaEnum;
 }

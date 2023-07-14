@@ -1,6 +1,4 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CooperadoModule } from './modules/cooperado.module';
 import { BullModule } from '@nestjs/bull';
@@ -9,6 +7,8 @@ import { ImportacaoModule } from './modules/importacao.module';
 import { PontoAtendimentoModule } from './modules/ponto-atendimento.module';
 import { ProdutoCartaoModule } from './modules/produto-cartao.module';
 import { typeOrmConfig } from './utils/database.config';
+import { HistoricoModule } from './modules/historico.module';
+import { RedisModule } from './modules/redis.module';
 
 @Module({
   imports: [
@@ -24,8 +24,8 @@ import { typeOrmConfig } from './utils/database.config';
     ImportacaoModule,
     PontoAtendimentoModule,
     ProdutoCartaoModule,
+    HistoricoModule,
+    RedisModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
 })
 export class AppModule {}
